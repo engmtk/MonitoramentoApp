@@ -1,0 +1,138 @@
+﻿@model IEnumerable<MonitoramentoApp.Models.LogExecucao>
+
+<h2>Monitoramento de Execuções</h2>
+
+<!-- Exibir contagem regressiva no canto superior direito -->
+<div id="contador" style="position: fixed; top: 10px; right: 10px; font-weight: bold; font-size: 14px;">
+    Esta página será atualizada em <span id="tempoRestante">60</span> segundos
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID Execução</th>
+            <th>Procedure</th>
+            <th>Data Início</th>
+            <th>Data Fim</th>
+            <th>Status</th>
+            <th>Duração (segundos)</th>
+            <th>Observação</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+
+        {
+            <tr>
+                <td>@log.ID_Execucao</td>
+                <td>@log.NomeProcedure</td>
+                <td>@log.DataInicio</td>
+                <td>
+                    @if (log.DataFim != null)
+                    {
+                        @log.DataFim?.ToString()
+                    }
+                    else if (log.Status == "Executando")
+                    {
+                        <span>Em execução</span>
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </td>
+                <td>@log.Status</td>
+                <td>@log.Duracao</td>
+                <td>@log.Observacao</td>
+                <td>
+                    @if (log.Status == "Removido")
+                    {
+                        <button onclick="retornarParaFila(@log.ID_Execucao)" class="btn btn-primary">RTFILA</button>
+                    }
+                    else if (log.Status == "Executando" || log.Status == "Erro" || log.Status == "Aguardando Execução")
+                    {
+                        <button onclick="reiniciar(@log.ID_Execucao)" class="btn btn-warning">Reiniciar</button>
+                        <button onclick="removerDaFila(@log.ID_Execucao)" class="btn btn-danger">Remover da Fila</button>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Nenhuma ação disponível</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Paginação -->
+<div class="pagination">
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+
+    {
+        <a href="/Monitoramento/Index?page=@i" class="page-link @(ViewBag.CurrentPage == i ? "active" : "")">@i</a>
+    }
+</div>
+
+<!-- Funções JavaScript para manipular as execuções -->
+<script type="text/javascript">
+    function retornarParaFila(idExecucao) {
+        fetch(`/Monitoramento/RetornarParaFila/${idExecucao}`, {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                alert('Execução retornada para fila com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao retornar a execução para a fila');
+            }
+        }).catch(error => {
+            console.error('Erro ao retornar para fila:', error);
+        });
+    }
+
+    function reiniciar(idExecucao) {
+        fetch(`/Monitoramento/ReiniciarFluxo/${idExecucao}`, {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                alert('Fluxo reiniciado com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao reiniciar o fluxo');
+            }
+        }).catch(error => {
+            console.error('Erro ao reiniciar o fluxo:', error);
+        });
+    }
+
+    function removerDaFila(idExecucao) {
+        fetch(`/Monitoramento/RetirarDaFila/${idExecucao}`, {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                alert('Removido da fila com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao remover da fila');
+            }
+        }).catch(error => {
+            console.error('Erro ao remover da fila:', error);
+        });
+    }
+
+    // Contagem regressiva e atualização automática da página
+    var tempoRestante = 15; // 60 segundos para a atualização
+
+    // Atualizar a contagem regressiva a cada segundo
+    var intervalo = setInterval(function () {
+        tempoRestante--; // Reduzir o tempo restante em 1 segundo
+        document.getElementById("tempoRestante").innerText = tempoRestante; // Atualizar o texto na página
+
+        // Se o tempo chegar a zero, recarregar a página
+        if (tempoRestante === 0) {
+            clearInterval(intervalo); // Parar o intervalo
+            location.reload(); // Recarregar a página
+        }
+    }, 1000); // Executa a cada 1000 milissegundos (1 segundo)
+</script>
