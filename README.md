@@ -5,42 +5,43 @@ Importante: O funcionamento correto do sistema depende do Robô Execution, uma a
 Funcionalidades Principais
 
 1. Exibição das Execuções
-•	As execuções são listadas em uma tabela, mostrando detalhes como:
+
+As execuções são listadas em uma tabela, mostrando detalhes como:
 ID da Execução
 Nome da Procedure
 Data de Início e Fim
 Status Atual
 Duração (segundos)
 Observações
-•	O sistema exibe as 20 execuções mais recentes no topo, garantindo acesso rápido às execuções mais relevantes.
+O sistema exibe as 20 execuções mais recentes no topo, garantindo acesso rápido às execuções mais relevantes.
 
 2. Ações Manuais
-•	Remover da Fila: Remove a execução do fluxo, impedindo o processamento, mas registrando a ação no histórico.
-•	Retornar para Fila: Recoloca a execução removida de volta na fila, permitindo que o Robô Execution a processe novamente.
-•	Reiniciar Fluxo: Reinicia execuções com erro ou em andamento, registrando a ação no campo Observação.
+Remover da Fila: Remove a execução do fluxo, impedindo o processamento, mas registrando a ação no histórico.
+Retornar para Fila: Recoloca a execução removida de volta na fila, permitindo que o Robô Execution a processe novamente.
+Reiniciar Fluxo: Reinicia execuções com erro ou em andamento, registrando a ação no campo Observação.
 
 3. Histórico de Ações
-•	O campo Observação mantém um registro detalhado de todas as ações realizadas, como:
+O campo Observação mantém um registro detalhado de todas as ações realizadas, como:
 Retirado da fila manualmente
 Retornado para fila manualmente
 Fluxo reiniciado manualmente
 Isso garante rastreabilidade total das execuções.
 
 4. Atualizações em Tempo Real
-•	Utiliza SignalR para exibir mudanças instantâneas nas execuções.
-•	Um contador regressivo de 60 segundos no canto superior direito indica o tempo para o próximo recarregamento automático.
+Utiliza SignalR para exibir mudanças instantâneas nas execuções.
+Um contador regressivo de 60 segundos no canto superior direito indica o tempo para o próximo recarregamento automático.
 
 5. Log de Ações
-•	As interações são registradas em um log detalhado, facilitando auditorias e verificações.
+As interações são registradas em um log detalhado, facilitando auditorias e verificações.
 
 Tecnologias Utilizadas
-•	ASP.NET Core MVC: Estrutura principal do site.
-•	C#: Backend para lógica de negócios.
-•	SQL Server: Banco de dados das execuções.
-•	SignalR: Atualizações em tempo real.
-•	HTML/CSS/JavaScript: Interface do usuário.
-•	Bootstrap: Estilo responsivo.
-•	EPPlus: Exportação para Excel.
+ASP.NET Core MVC: Estrutura principal do site.
+C#: Backend para lógica de negócios.
+SQL Server: Banco de dados das execuções.
+SignalR: Atualizações em tempo real.
+HTML/CSS/JavaScript: Interface do usuário.
+Bootstrap: Estilo responsivo.
+EPPlus: Exportação para Excel.
 
 Como Funciona o Sistema
 
@@ -74,9 +75,9 @@ APROV_AUTOMATICA para execuções automáticas.
 A procedure só cria uma nova execução se não houver pendências.
 A nova execução é criada com a observação APROV_AUTOMATICA.
 Alguns ajustes
-•	Gerenciamento Eficiente: Prioriza execuções pendentes, evitando duplicidade.
-•	Rastreamento Completo: O histórico mantém todas as ações do usuário e do robô.
-•	Identificação Clara: Execuções automáticas são marcadas com APROV_AUTOMATICA.
+Gerenciamento Eficiente: Prioriza execuções pendentes, evitando duplicidade.
+Rastreamento Completo: O histórico mantém todas as ações do usuário e do robô.
+Identificação Clara: Execuções automáticas são marcadas com APROV_AUTOMATICA.
 
 Execução do Projeto
 1.	Inicie o Robô Execution (aplicativo console).
